@@ -76,6 +76,7 @@ function calculate() {
             }
         }
     })
+
     encoded.value = `exams=${encodedString}&type=${mediaType.value}`
     window.history.pushState(null, null, '?' + encoded.value)
 
@@ -141,6 +142,7 @@ onMounted(() => {
 </script>
 <template>
     <NuxtLayout name="media">
+        <a :href="rebaseUrl('/')">&lt;&lt;&lt; Torna al sito</a>
         <h1 class="html-rainbow-text">
             <b>[unofficial] Calcolatore-media-Unipi-inator 3000</b>
         </h1>
