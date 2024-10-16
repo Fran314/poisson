@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Francesco Baldino - Calcolatore Media</title>
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link
+      rel="preload"
+      href="/fonts/ComicShannsMonoNerdFont-Regular.otf"
+      as="font"
+      type="font/otf"
+      crossorigin
+    />
+    <style>
+      @font-face {
+        font-family: "ComicShannsMono";
+        src: url("/fonts/ComicShannsMonoNerdFont-Regular.otf")
+          format("opentype");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+      .html-rainbow-text {
+        margin-top: 0px;
+        margin-bottom: 50px;
+        text-align: center;
+        font-family: "ComicShannsMono";
+        font-size: 42px;
+        letter-spacing: 0.15rem;
+        text-transform: uppercase;
+        color: #ef3550;
+
+        text-shadow:
+          -4px 4px #f9a825,
+          -8px 8px #eeff41,
+          -12px 12px #43a047,
+          -16px 16px #26c6da,
+          -20px 20px #2196f3,
+          -24px 24px #7e57c2,
+          -28px 28px #f48fb1,
+          -32px 32px #ff5722,
+          -36px 36px #f9a825;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="html-rainbow-text">
+      <b>[unofficial] Calcolatore-media-Unipi-inator 3000</b>
+    </div>
+    <table id="exams_list" style="width: 300px; table-layout: fixed">
+      <colgroup>
+        <col span="1" style="width: 10%" />
+        <col span="1" style="width: 40%" />
+        <col span="1" style="width: 20%" />
+        <col span="1" style="width: 20%" />
+        <col span="1" style="width: 10%" />
+      </colgroup>
+      <tbody>
+        <tr>
+          <td></td>
+          <td>Esame (max 5 caratteri alfanumerici)</td>
+          <td>Crediti</td>
+          <td>Voto</td>
+          <td>Lode</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <button onclick="add_exam()" style="margin: auto; display: block">
+              +
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <select id="media_type" onchange="update_text()">
+      <option value="T">Triennale</option>
+      <option value="M">Magistrale</option>
+    </select>
+    <button onclick="calculate()">Calcola Media</button>
+    <span
+      >(cambia modalità per aggiornare automaticamente il testo relativo al
+      regolamento)</span
+    ><br /><br />
+    <table>
+      <colgroup>
+        <col span="1" style="width: 200px" />
+      </colgroup>
+      <tbody>
+        <tr>
+          <td>Media:</td>
+          <td id="media_value"></td>
+        </tr>
+        <tr>
+          <td>Voto di accesso alla laurea:</td>
+          <td id="accesso_value"></td>
+        </tr>
+      </tbody>
+    </table>
+    <label id="save_label"></label><br /><br /><br />
+    La media e il voto di accesso alla laurea
+    <span id="text_type_1">triennale</span> sono calcolati come specificato nel
+    regolamento del corso di laurea
+    <span id="text_type_2"
+      ><a
+        href="https://www.dm.unipi.it/wp-content/uploads/2023/01/Report-Corso-di-Studi_MAT-L_23-24.pdf"
+        target="_blank"
+        >triennale</a
+      ></span
+    >
+    2023/2024 (punti [a] e [b] della sezione "Modalità determinazione voto di
+    Laurea"), riportato di seguito:<br />
+    [a] Il punteggio di base è calcolato a partire dal curriculum del candidato
+    con la seguente procedura:<br />
+    &emsp;&emsp;- a ogni credito acquisito dal candidato tramite un'attività
+    formativa presente sul suo piano di studio che preveda un voto è attribuito
+    un valore corrispondente a questo voto (espresso in trentesimi);<br />
+    &emsp;&emsp;- sono poi scartati i
+    <span id="text_crediti_esclusi">15</span> crediti a cui è stato attribuito
+    il valore inferiore;<br />
+    &emsp;&emsp;- infine, viene calcolata la media dei valori attribuiti ai
+    crediti rimanenti.<br />
+    &emsp;&ensp;Il punteggio di base è questa media espressa in centodecimi,
+    approssimata per eccesso al secondo decimale.<br />
+    [b] Il punteggio di lodi, espresso in centodecimi, è ottenuto sommando 0.25
+    punti per ogni lode ottenuta in un'attività formativa di al più
+    <span id="text_soglia_val_lode_inf">6</span> crediti, e 0.50 punti per ogni
+    lode ottenuta in un'attività formativa di almeno
+    <span id="text_soglia_val_lode">7</span> crediti, fino a un massimo di
+    <span id="text_max_bonus_lode">1.5</span> punti. <br /><br /><br />
+    Se avete suggerimenti su come rendere questa pagina ancora più brutta vi
+    prego fatevi avanti.
+    <script is:inline>
+      function add_exam(name = "", credits = 0, grade = 0, lode = false) {
+        let row = exams_table.insertRow(exams_table.rows.length - 1);
+        let delete_button = document.createElement("button");
+        delete_button.style = "margin: auto; display: block;";
+        delete_button.innerHTML = "-";
+        delete_button.onclick = function () {
+          delete_exam(delete_button);
+        };
+
+        let exam_name = document.createElement("input");
+        exam_name.value = name;
+        exam_name.style = "width: 100%; box-sizing: border-box;";
+        exam_name.type = "text";
+        exam_name.onkeypress = function (event) {
+          if (exam_name.value.length >= 5) return false;
+
+          var charCode = event.which ? event.which : event.keyCode;
+          if (
+            (charCode >= 48 && charCode <= 57) ||
+            (charCode >= 64 && charCode <= 90) ||
+            (charCode >= 97 && charCode <= 122)
+          )
+            return true;
+
+          return false;
+        };
+
+        let exam_credits = document.createElement("input");
+        exam_credits.value = credits;
+        exam_credits.style = "width: 100%; box-sizing: border-box;";
+        exam_credits.type = "number";
+
+        let exam_grade = document.createElement("input");
+        exam_grade.value = grade;
+        exam_grade.style = "width: 100%; box-sizing: border-box;";
+        exam_grade.type = "number";
+
+        let lode_checkbox = document.createElement("input");
+        lode_checkbox.checked = lode;
+        lode_checkbox.type = "checkbox";
+
+        row.insertCell(0).appendChild(delete_button);
+        row.insertCell(1).appendChild(exam_name);
+        row.insertCell(2).appendChild(exam_credits);
+        row.insertCell(3).appendChild(exam_grade);
+        row.insertCell(4).appendChild(lode_checkbox);
+      }
+
+      function delete_exam(button) {
+        let td = button.parentNode;
+        let tr = td.parentNode;
+        tr.parentNode.removeChild(tr);
+      }
+
+      function update_text() {
+        let text_type_1 =
+          type_combo_box.value == "T" ? "triennale" : "magistrale";
+        let id_corso_laurea = type_combo_box.value == "T" ? "MAT-L" : "WMA-LM";
+        let text_type_2 =
+          '<a href="https://www.dm.unipi.it/wp-content/uploads/2023/01/Report-Corso-di-Studi_' +
+          id_corso_laurea +
+          '_23-24.pdf" target="_blank">' +
+          text_type_1 +
+          "</a>";
+        let text_crediti_esclusi = type_combo_box.value == "T" ? 15 : 9;
+        let text_soglia_val_lode = type_combo_box.value == "T" ? 7 : 8;
+        let text_soglia_val_lode_inf = text_soglia_val_lode - 1;
+        let text_max_bonus_lode = type_combo_box.value == "T" ? 1.5 : 2;
+
+        document.getElementById("text_type_1").innerHTML = text_type_1;
+        document.getElementById("text_type_2").innerHTML = text_type_2;
+        document.getElementById("text_crediti_esclusi").innerHTML =
+          text_crediti_esclusi;
+        document.getElementById("text_soglia_val_lode").innerHTML =
+          text_soglia_val_lode;
+        document.getElementById("text_soglia_val_lode_inf").innerHTML =
+          text_soglia_val_lode_inf;
+        document.getElementById("text_max_bonus_lode").innerHTML =
+          text_max_bonus_lode;
+      }
+
+      function calculate() {
+        let bonus_lode = 0;
+        let voti_per_credito = [];
+        let exams_string = "";
+        let soglia_val_lode = type_combo_box.value == "T" ? 7 : 8;
+        let max_bonus_lode = type_combo_box.value == "T" ? 1.5 : 2;
+        let crediti_esclusi = type_combo_box.value == "T" ? 15 : 9;
+        for (i = 1; i < exams_table.rows.length - 1; i++) {
+          let crediti = parseInt(
+            exams_table.rows[i].cells[2].childNodes[0].value,
+          );
+          let voto = parseInt(exams_table.rows[i].cells[3].childNodes[0].value);
+          if (exams_table.rows[i].cells[1].childNodes[0].value.length >= 5) {
+            exams_string += exams_table.rows[
+              i
+            ].cells[1].childNodes[0].value.substr(0, 5);
+            exams_table.rows[i].cells[1].childNodes[0].value = exams_table.rows[
+              i
+            ].cells[1].childNodes[0].value.substr(0, 5);
+          } else {
+            exams_string +=
+              exams_table.rows[i].cells[1].childNodes[0].value + "!";
+          }
+
+          if (crediti <= 0 || crediti > 30) {
+            alert("Il " + i + "° esame ha un numero di crediti non valido.");
+            return;
+          }
+          if (crediti < 10) exams_string += "0";
+          exams_string += crediti;
+
+          if (voto < 18 || voto > 30) {
+            alert("Il " + i + "° esame ha un voto non valido");
+            return;
+          }
+          if (voto == 30 && exams_table.rows[i].cells[4].childNodes[0].checked)
+            exams_string += 31;
+          else exams_string += voto;
+
+          for (j = 0; j < crediti; j++) {
+            voti_per_credito.push(voto);
+          }
+          if (
+            voto == 30 &&
+            exams_table.rows[i].cells[4].childNodes[0].checked
+          ) {
+            if (crediti < soglia_val_lode) bonus_lode += 0.25;
+            else bonus_lode += 0.5;
+          }
+        }
+        window.history.pushState(
+          null,
+          null,
+          "?exams=" + exams_string + "&type=" + type_combo_box.value,
+        );
+        document.getElementById("save_label").innerHTML =
+          'Salva <a href="' +
+          window.location.href +
+          '" target="_blank">questo link</a> per non dover inserire manualmente gli esami ogni volta!';
+
+        voti_per_credito.sort();
+
+        if (voti_per_credito.length > crediti_esclusi) {
+          voti_per_credito = voti_per_credito.slice(
+            crediti_esclusi,
+            voti_per_credito.length,
+          );
+          let sum = 0;
+          for (i = 0; i < voti_per_credito.length; i++)
+            sum += voti_per_credito[i];
+          let media = sum / voti_per_credito.length;
+
+          if (bonus_lode > max_bonus_lode) bonus_lode = max_bonus_lode;
+
+          let accesso = Math.ceil(((media * 11) / 3) * 100) / 100 + bonus_lode;
+
+          document.getElementById("media_value").innerHTML =
+            parseFloat(media).toFixed(2);
+          document.getElementById("accesso_value").innerHTML =
+            parseFloat(accesso).toFixed(2);
+
+          var audio = new Audio("wow.mp3");
+          audio.play();
+        } else {
+          document.getElementById("media_value").innerHTML =
+            "Non hai abbastanza crediti per calcolare una media (ne servono più di " +
+            crediti_esclusi +
+            ")";
+        }
+      }
+
+      let exams_table = document.getElementById("exams_list");
+      let type_combo_box = document.getElementById("media_type");
+
+      let url = new URL(window.location.href);
+      if (url.searchParams.has("type")) {
+        type_combo_box.value = url.searchParams.get("type");
+      }
+      if (url.searchParams.has("exams")) {
+        let exams_string = url.searchParams.get("exams");
+        let exam_name = "";
+        for (i = 0; i < exams_string.length; i++) {
+          if (exams_string.charAt(i) != "!" && exam_name.length < 5) {
+            exam_name += exams_string.charAt(i);
+          } else {
+            if (exams_string.charAt(i) == "!") i++;
+            let exam_credits = parseInt(exams_string.substr(i, 2));
+            let exam_grade = parseInt(exams_string.substr(i + 2, 2));
+            i += 3;
+            let lode = false;
+            if (exam_grade == 31) {
+              exam_grade = 30;
+              lode = true;
+            }
+            add_exam(exam_name, exam_credits, exam_grade, lode);
+            exam_name = "";
+          }
+        }
+
+        calculate();
+      }
+      update_text();
+
+      if (exams_table.rows.length == 2) add_exam();
+    </script>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+    <div>
+        <!-- Markup shared across all pages, ex: NavBar -->
+        <NuxtPage />
+    </div>
 </template>

@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+      }
+      body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+      }
+
+      /* Smartphones (portrait) ----------- */
+      @media (width <= 720px) {
+        body {
+          grid-template-columns: 1fr;
+          grid-template-rows: 1fr 1fr;
+        }
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+        display: inline-block;
+      }
+
+      #canvas1 {
+        background-color: #f00;
+      }
+      #canvas2 {
+        background-color: #0f0;
+      }
+    </style>
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas id="canvas1"></canvas>
+    <canvas id="canvas2"></canvas>
+  </body>
+  <script>
+    let canvas1 = document.getElementById("canvas1");
+    const WINDOW_WIDTH = (canvas1.width = window.innerWidth / 2);
+    const WINDOW_HEIGHT = (canvas1.height = window.innerHeight);
+    let context1 = canvas1.getContext("2d");
+
+    let canvas2 = document.getElementById("canvas2");
+    canvas2.width = WINDOW_WIDTH;
+    canvas2.height = WINDOW_HEIGHT;
+    let context2 = canvas2.getContext("2d");
+
+    let eps = 0.01;
+
+    let scale = 400;
+
+    let sqrt2 = Math.sqrt(2);
+    let sqrt3 = Math.sqrt(3);
+    let sqrt6 = Math.sqrt(6);
+
+    function lerp(time, startTime, endTime, startVal, endVal) {
+      if (time < startTime) return startVal;
+      else if (time > endTime) return endVal;
+
+      return startVal + (endVal * (time - startTime)) / (endTime - startTime);
+    }
+    function angles1(t) {
+      return [
+        lerp(t, 0, 1, 0, 0.3),
+        lerp(t, 2, 3, 0, 0.4),
+        lerp(t, 4, 5, 0, 0.5),
+      ];
+    }
+    function angles2(t) {
+      return [
+        lerp(t, 4, 5, 0, 0.3),
+        lerp(t, 2, 3, 0, 0.4),
+        lerp(t, 0, 1, 0, 0.5),
+      ];
+    }
+
+    function mod(arg, m) {
+      if (m < 0) return 0;
+      while (arg < 0) arg += m;
+      while (arg > m) arg -= m;
+
+      return arg;
+    }
+
+    function project(arg) {
+      let vec = arg.slice();
+      vec[2] = scale * arg[0];
+      vec[0] = scale * arg[1];
+      vec[1] = -scale * arg[2];
+      return [
+        vec[0] / sqrt2 - vec[2] / sqrt2,
+        vec[0] / sqrt6 + (2 * vec[1]) / sqrt6 + vec[2] / sqrt6,
+      ];
+    }
+    function rotate2D(vec, rad) {
+      return [
+        vec[0] * Math.cos(rad) - vec[1] * Math.sin(rad),
+        vec[0] * Math.sin(rad) + vec[1] * Math.cos(rad),
+      ];
+    }
+
+    function sprod(v1, v2) {
+      return v1.map((val, pos) => v1[pos] * v2[pos]).reduce((a, b) => a + b, 0);
+    }
+    function mvprod(mat, vec) {
+      return vec.map((val, i) => {
+        let output = 0;
+        for (let j = 0; j < vec.length; j++) {
+          output += vec[j] * mat[i][j];
+        }
+        return output;
+      });
+    }
+    function rotMat(axis, theta) {
+      let cos = Math.cos(theta);
+      let sin = Math.sin(theta);
+      let x = axis[0],
+        y = axis[1],
+        z = axis[2];
+
+      return [
+        [
+          cos + x * x * (1 - cos),
+          x * y * (1 - cos) - z * sin,
+          x * z * (1 - cos) + y * sin,
+        ],
+        [
+          y * x * (1 - cos) + z * sin,
+          cos + y * y * (1 - cos),
+          y * z * (1 - cos) - x * sin,
+        ],
+        [
+          z * x * (1 - cos) - y * sin,
+          z * y * (1 - cos) + x * sin,
+          cos + z * z * (1 - cos),
+        ],
+      ];
+    }
+    function rotate3D(vec, axis, theta) {
+      return mvprod(rotMat(normalized(axis), theta), vec);
+    }
+    function norm(arg) {
+      return Math.sqrt(sprod(arg, arg));
+    }
+    function normalized(arg) {
+      let n = norm(arg);
+      return arg.map((val) => val / n);
+    }
+    function angle(arg) {
+      let vec = [arg[0], arg[1]];
+
+      let angle = 0;
+      if (Math.abs(vec[0]) < eps) {
+        if (vec[1] > 0) angle = Math.PI / 2;
+        else angle = (3 * Math.PI) / 2;
+      } else {
+        angle = Math.atan(vec[1] / vec[0]);
+        if (vec[0] < 0) angle -= Math.PI;
+      }
+
+      return mod(angle, 2 * Math.PI);
+    }
+    function drawAngle(ctx, pos, vec1, vec2, name) {
+      let sa = angle(vec1);
+      let ea = angle(vec2);
+      ctx.beginPath();
+      ctx.arc(pos[0], pos[1], scale / 4, sa, ea);
+      let text = rotate2D(vec1, mod(ea - sa, 2 * Math.PI) / 2);
+      ctx.fillText(
+        name,
+        pos[0] + (text[0] * scale) / 8,
+        pos[1] + (text[1] * scale) / 8,
+      );
+      ctx.stroke();
+    }
+
+    function drawVector(
+      ctx,
+      pos,
+      vec,
+      dotted = false,
+      color = null,
+      name = null,
+    ) {
+      if (color !== null) {
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+      }
+
+      if (dotted) ctx.setLineDash([5, 15]);
+      drawLine(ctx, pos, vec);
+      ctx.setLineDash([]);
+
+      const dir = normalized(vec);
+      drawTriangle(ctx, [pos[0] + vec[0], pos[1] + vec[1]], dir);
+
+      if (name)
+        ctx.fillText(
+          name,
+          pos[0] + vec[0] + dir[0] * 20,
+          pos[1] + vec[1] + dir[1] * 20,
+        );
+    }
+    function drawLine(ctx, pos, vec) {
+      ctx.lineCap = "round";
+      ctx.lineWidth = 3;
+
+      ctx.beginPath();
+      ctx.moveTo(pos[0], pos[1]);
+      ctx.lineTo(pos[0] + vec[0], pos[1] + vec[1]);
+      ctx.stroke();
+    }
+
+    function drawTriangle(ctx, pos, dir) {
+      ctx.lineCap = "square";
+      ctx.lineWidth = 1;
+
+      ctx.beginPath();
+
+      let x = pos[0] + dir[0] * 5;
+      let y = pos[1] + dir[1] * 5;
+      ctx.moveTo(x, y);
+
+      x = x + rotate2D(dir, (-Math.PI * 5) / 6)[0] * 10;
+      y = y + rotate2D(dir, (-Math.PI * 5) / 6)[1] * 10;
+      ctx.lineTo(x, y);
+
+      x = x + rotate2D(dir, Math.PI / 2)[0] * 10;
+      y = y + rotate2D(dir, Math.PI / 2)[1] * 10;
+      ctx.lineTo(x, y);
+
+      ctx.fill();
+    }
+    function drawMatrixSymbol(context, pos, sub, sup) {
+      context.font = "32px sans-serif";
+      context.fillText("R", pos[0], pos[1]);
+
+      context.font = "16px sans-serif";
+      context.fillText(sub, pos[0] + 16, pos[1] + 6);
+
+      const supShift = (sup.length - 3) * 4 + 20;
+      context.fillText(sup, pos[0] + supShift, pos[1] - 12);
+    }
+
+    function draw(context, angles) {
+      context.fillStyle = "white";
+      context.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+      context.strokeStyle = "black";
+      context.fillStyle = "black";
+      context.font = "16px sans-serif";
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+
+      let [phi, theta, psi] = angles;
+
+      let x = [1, 0, 0],
+        y = [0, 1, 0],
+        z = [0, 0, 1];
+      let x1 = rotate3D(x, z, phi),
+        y1 = rotate3D(y, z, phi),
+        z1 = z;
+      let x2 = x1,
+        y2 = rotate3D(y1, x1, theta),
+        z2 = rotate3D(z1, x1, theta);
+      let xp = rotate3D(x2, z2, psi),
+        yp = rotate3D(y2, z2, psi),
+        zp = z2;
+
+      drawVector(
+        context,
+        [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+        project(x),
+        false,
+        null,
+        "x",
+      );
+      drawVector(
+        context,
+        [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+        project(y),
+        false,
+        null,
+        "y",
+      );
+      drawVector(
+        context,
+        [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+        project(z),
+        false,
+        null,
+        "z = z1",
+      );
+
+      if (phi > 0)
+        drawVector(
+          context,
+          [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+          project(x1),
+          true,
+          null,
+          "x1" + (time > 2 ? " = x2" : ""),
+        );
+      if (phi > 0 && time < 6)
+        drawVector(
+          context,
+          [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+          project(y1),
+          true,
+          null,
+          "y1",
+        );
+      if (phi > 0)
+        drawAngle(
+          context,
+          [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+          normalized(project(x1)),
+          normalized(project(x)),
+          "φ",
+        );
+
+      if (theta > 0 && time < 6)
+        drawVector(
+          context,
+          [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+          project(y2),
+          true,
+          null,
+          "y2",
+        );
+      if (theta > 0)
+        drawVector(
+          context,
+          [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+          project(z2),
+          false,
+          null,
+          "z2" + (time > 4 ? " = zp" : ""),
+        );
+      if (theta > 0)
+        drawAngle(
+          context,
+          [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+          normalized(project(z2)),
+          normalized(project(z1)),
+          "θ",
+        );
+
+      if (psi > 0)
+        drawVector(
+          context,
+          [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+          project(xp),
+          false,
+          null,
+          "xp",
+        );
+      if (psi > 0)
+        drawVector(
+          context,
+          [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+          project(yp),
+          false,
+          null,
+          "yp",
+        );
+      if (psi > 0)
+        drawAngle(
+          context,
+          [WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2],
+          normalized(project(xp)),
+          normalized(project(x2)),
+          "ψ",
+        );
+    }
+
+    function animate() {
+      let ct = new Date().getTime();
+      let dt = Math.min((ct - lt) / 1000, 1 / 60);
+      time += dt;
+      if (time > 10) time = 0;
+      lt = ct;
+
+      draw(context1, angles1(time));
+      draw(context2, angles2(time));
+
+      drawMatrixSymbol(
+        context1,
+        [WINDOW_WIDTH / 2 - 55, WINDOW_HEIGHT - 100],
+        "ψ",
+        "(zp)",
+      );
+      drawMatrixSymbol(
+        context1,
+        [WINDOW_WIDTH / 2, WINDOW_HEIGHT - 100],
+        "θ",
+        "(x1)",
+      );
+      drawMatrixSymbol(
+        context1,
+        [WINDOW_WIDTH / 2 + 55, WINDOW_HEIGHT - 100],
+        "φ",
+        "(z)",
+      );
+
+      drawMatrixSymbol(
+        context2,
+        [WINDOW_WIDTH / 2 - 45, WINDOW_HEIGHT - 100],
+        "φ",
+        "(z)",
+      );
+      drawMatrixSymbol(
+        context2,
+        [WINDOW_WIDTH / 2, WINDOW_HEIGHT - 100],
+        "θ",
+        "(x)",
+      );
+      drawMatrixSymbol(
+        context2,
+        [WINDOW_WIDTH / 2 + 45, WINDOW_HEIGHT - 100],
+        "ψ",
+        "(z)",
+      );
+
+      requestAnimationFrame(animate);
+    }
+
+    let lt = new Date().getTime();
+    let time = 0;
+    animate();
+  </script>
+</html>

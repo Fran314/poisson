@@ -1,0 +1,30 @@
+* {
+    box-sizing: border-box;
+}
+/* Positive classes */
+@media (width > 720px) {
+    .mobile,
+    .mobile-large,
+    .mobile-small {
+        display: none !important;
+    }
+}
+@media (465px < width <= 720px) {
+    .desktop,
+    .mobile-small {
+        display: none !important;
+    }
+}
+@media (width <= 465px) {
+    .desktop,
+    .mobile-large {
+        display: none !important;
+    }
+}
+
+/* Negative classes */
+@media (width <= 465px) {
+    .not-mobile-small {
+        display: none !important;
+    }
+}
