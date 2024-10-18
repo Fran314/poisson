@@ -2,12 +2,20 @@
 const props = defineProps(['page'])
 
 const active = ref(false)
+
+const toggleActive = e => {
+    e.stopPropagation()
+    active.value = !active.value
+}
 </script>
 <template>
-    <div class="mobile-navbar-wrapper" :class="{ active }">
+    <div
+        class="mobile-navbar-wrapper"
+        :class="{ active }"
+        @click="toggleActive"
+    >
         <div class="menu-wrapper">
-            <div class="hitbox" @click="active = !active" />
-            <div class="menu">Menu</div>
+            <div class="menu" @click="toggleActive">Menu</div>
         </div>
         <div class="main-navbar">
             <Navbar :page="page" />
@@ -36,6 +44,7 @@ const active = ref(false)
 
 .mobile-navbar-wrapper.active {
     background: rgba(0, 0, 0, 0.6);
+    pointer-events: auto;
 }
 .main-navbar {
     width: 10rem;
@@ -51,24 +60,14 @@ const active = ref(false)
     border: 2px #fff solid;
     height: fit-content;
 
-    /* pointer-events: auto; */
+    pointer-events: auto;
 
     box-shadow: 0 0 5px 0px #1a1a1a;
 
-    position: relative;
+    cursor: pointer;
 }
 .mobile-navbar-wrapper.active .menu-wrapper {
     position: initial;
-}
-.hitbox {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    pointer-events: auto;
-    cursor: pointer;
 }
 
 .menu {

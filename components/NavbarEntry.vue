@@ -8,7 +8,10 @@ const {
 
 <template>
     <div class="entry" :class="{ selected: page == name }">
-        <a :href="rebaseUrl(link)"> {{ name }} </a>
+        <!-- <a :href="rebaseUrl(link)" @click="e => e.stopPropagation()"> -->
+        <a :href="rebaseUrl(link)">
+            {{ name }}
+        </a>
     </div>
 </template>
 
