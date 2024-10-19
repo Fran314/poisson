@@ -131,7 +131,7 @@ const isAutumnEquinoxWeek = () => {
 }
 export default (width, height) => {
     if (!isAutumnEquinoxWeek()) {
-        // return null
+        return null
     }
 
     let amount = width < 720 ? 10 : 20
