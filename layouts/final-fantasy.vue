@@ -40,6 +40,8 @@ useSeoMeta({
     <!-- Screen reader stuff -->
     <NuxtRouteAnnouncer />
 
+    <BackgroundDecorations />
+
     <audio :src="audio" autoplay></audio>
     <div class="header">
         <h5><span class="desktop">Francesco Baldino -</span> {{ title }}</h5>

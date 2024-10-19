@@ -25,8 +25,8 @@ const {
         <template #main>
             <div class="main">
                 <div class="stats">
-                    <div class="hp">{{ hp }}</div>
-                    <div class="mp">{{ mp }}</div>
+                    <div class="hp">HP {{ hp }}</div>
+                    <div class="mp">MP {{ mp }}</div>
                 </div>
                 <div class="ap">
                     <img class="magic-stone" :src="magicStone" />
