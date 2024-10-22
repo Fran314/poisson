@@ -24,6 +24,10 @@ import imgSE from '~/assets/img/decorations/spring-petal-mugshot.png'
             center="Equinozio di Primavera"
             bottomRight="prima settimana di Primavera"
         />
-        <CardEntry :disabled="true" />
+        <CardEntry
+            link="/?decoration=chocobo-run"
+            center="Chocobo run"
+            bottomRight="random con probabilità 1/20"
+        />
     </NuxtLayout>
 </template>

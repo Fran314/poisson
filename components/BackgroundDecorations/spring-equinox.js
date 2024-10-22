@@ -18,7 +18,6 @@ class SEEventManager {
             img.src = imgs[i]
             return img
         })
-        console.log(this.images)
 
         this.particles = []
         for (let i = 0; i < amount; i++) {
@@ -55,8 +54,8 @@ class SEEventManager {
             ctx.rotate(-p.life / 2)
             ctx.drawImage(
                 this.images[p.img],
-                -this.images[p.img].width,
-                -this.images[p.img].height,
+                -this.images[p.img].width / 2,
+                -this.images[p.img].height / 2,
                 this.images[p.img].width,
                 this.images[p.img].height,
             )
@@ -90,8 +89,6 @@ export default (width, height) => {
     if (!isSpringEquinoxWeek() && !hasParam()) {
         return null
     }
-
-    console.log('ciao')
 
     let amount = width < 720 ? 15 : 30
     return new SEEventManager(width, height, amount)

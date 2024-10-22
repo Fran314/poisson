@@ -2,6 +2,7 @@
 import generateWS from './winter-solstice.js'
 import generateAE from './autumn-equinox.js'
 import generateSE from './spring-equinox.js'
+import generateChocobo from './chocobo-run.js'
 const canvas = ref()
 
 onMounted(() => {
@@ -21,6 +22,7 @@ onMounted(() => {
         generateWS(canvas.value.width, canvas.value.height),
         generateAE(canvas.value.width, canvas.value.height),
         generateSE(canvas.value.width, canvas.value.height),
+        generateChocobo(canvas.value.width, canvas.value.height),
     ].filter(x => x !== null)
 
     if (events.length > 0) {
