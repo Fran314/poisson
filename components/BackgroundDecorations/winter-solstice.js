@@ -66,8 +66,12 @@ const isChristmas = () => {
     const day = date.getDate()
     return month == 12 && day == 25
 }
+const hasParam = () => {
+    let url = new URL(window.location.href)
+    return url.searchParams.get('decoration') === 'winter-solstice'
+}
 export default (width, height) => {
-    if (!isWinterSolsticeWeek()) {
+    if (!isWinterSolsticeWeek() && !hasParam()) {
         return null
     }
 

@@ -1,6 +1,7 @@
 <script setup>
 import generateWS from './winter-solstice.js'
 import generateAE from './autumn-equinox.js'
+import generateSE from './spring-equinox.js'
 const canvas = ref()
 
 onMounted(() => {
@@ -13,9 +14,13 @@ onMounted(() => {
 
     const context = canvas.value.getContext('2d')
 
+    // This is a bit of a convoluted way to handle the Sprite Managers,
+    // but it makes it so that if no event is needed, it doesn't enter the
+    // render loop at all, which hopefully saves some CPU
     const events = [
         generateWS(canvas.value.width, canvas.value.height),
         generateAE(canvas.value.width, canvas.value.height),
+        generateSE(canvas.value.width, canvas.value.height),
     ].filter(x => x !== null)
 
     if (events.length > 0) {

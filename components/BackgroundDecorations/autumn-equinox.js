@@ -16,7 +16,7 @@ const easeBetweenPnQ = x => {
     return P + easedX * (Q - P)
 }
 
-class WSEventManager {
+class AEEventManager {
     constructor(width, height, amount) {
         this.image = new Image()
         this.image.src = img
@@ -101,8 +101,8 @@ class WSEventManager {
             ctx.rotate(p.rot)
             ctx.drawImage(
                 this.image,
-                -this.image.width / 2,
-                -this.image.height / 2,
+                -this.image.width,
+                -this.image.height,
                 this.image.width,
                 this.image.height,
             )
@@ -129,12 +129,16 @@ const isAutumnEquinoxWeek = () => {
 
     return month == 8 && day >= ws && day < ws + 7
 }
+const hasParam = () => {
+    let url = new URL(window.location.href)
+    return url.searchParams.get('decoration') === 'autumn-equinox'
+}
 export default (width, height) => {
-    if (!isAutumnEquinoxWeek()) {
+    if (!isAutumnEquinoxWeek() && !hasParam()) {
         return null
     }
 
     let amount = width < 720 ? 10 : 20
 
-    return new WSEventManager(width, height, amount)
+    return new AEEventManager(width, height, amount)
 }
