@@ -5,7 +5,15 @@ const imgs = [img0, img1, img2]
 
 const FRAME_DURATION = 0.1
 
-class ChocoboEventManager {
+const isCrit = () => {
+    return Math.ceil(Math.random() * 20) == 20
+}
+const hasParam = () => {
+    let url = new URL(window.location.href)
+    return url.searchParams.get('decoration') === 'chocobo-run'
+}
+
+export default class ChocoboRun {
     constructor(width, height, amount) {
         this.images = [...Array(3).keys()].map(i => {
             const img = new Image()
@@ -13,13 +21,17 @@ class ChocoboEventManager {
             return img
         })
 
+        this.active = isCrit() || hasParam()
+
         this.life = 0
         this.y = height
-        this.x = width + 200
+        this.x = width + 400
     }
 
     update(dt, width, height) {
         this.life += dt
+
+        if (this.x - this.life * 200 < -100) this.active = false
     }
 
     draw(ctx) {
@@ -34,16 +46,4 @@ class ChocoboEventManager {
         )
         ctx.translate(-this.x + this.life * 200, -this.y)
     }
-}
-const hasParam = () => {
-    let url = new URL(window.location.href)
-    return url.searchParams.get('decoration') === 'chocobo-run'
-}
-export default (width, height) => {
-    const dice = Math.floor(Math.random() * 20)
-    if (dice != 0 && !hasParam()) {
-        return null
-    }
-    let amount = width < 720 ? 15 : 30
-    return new ChocoboEventManager(width, height, amount)
 }

@@ -11,13 +11,39 @@ import img9 from '~/assets/img/decorations/spring-petals/9.png'
 import img10 from '~/assets/img/decorations/spring-petals/10.png'
 const imgs = [img0, img1, img2, img3, img4, img5, img6, img7, img8, img9, img10]
 
-class SEEventManager {
-    constructor(width, height, amount) {
+const isSpringEquinoxWeek = () => {
+    const springEquinox = [
+        20, 20, 20, 21, 20, 20, 20, 21, 20, 20, 20, 21, 20, 20, 20, 20, 20, 20,
+        20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+        20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 19, 20, 20, 20, 19, 20,
+        20, 20, 19, 20, 20, 20, 19, 20, 20, 20, 19, 20, 20, 20, 19, 20, 20, 20,
+        19, 20, 20, 20, 19, 20, 20, 20, 19, 19, 20, 20, 19, 19, 20, 20, 19, 19,
+        20, 20, 19, 19, 20, 20, 19, 19, 20, 20,
+    ]
+
+    const date = new Date()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const ws = springEquinox[date.getFullYear % 100]
+
+    return month == 2 && day >= ws && day < ws + 7
+}
+const hasParam = () => {
+    let url = new URL(window.location.href)
+    return url.searchParams.get('decoration') === 'spring-equinox'
+}
+
+export default class SpringEquinox {
+    constructor(width, height) {
         this.images = [...Array(11).keys()].map(i => {
             const img = new Image()
             img.src = imgs[i]
             return img
         })
+
+        this.active = isSpringEquinoxWeek() || hasParam()
+
+        const amount = width < 720 ? 15 : 30
 
         this.particles = []
         for (let i = 0; i < amount; i++) {
@@ -63,33 +89,4 @@ class SEEventManager {
             ctx.translate(-p.x, -(p.y + offset))
         })
     }
-}
-const isSpringEquinoxWeek = () => {
-    const springEquinox = [
-        20, 20, 20, 21, 20, 20, 20, 21, 20, 20, 20, 21, 20, 20, 20, 20, 20, 20,
-        20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
-        20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 19, 20, 20, 20, 19, 20,
-        20, 20, 19, 20, 20, 20, 19, 20, 20, 20, 19, 20, 20, 20, 19, 20, 20, 20,
-        19, 20, 20, 20, 19, 20, 20, 20, 19, 19, 20, 20, 19, 19, 20, 20, 19, 19,
-        20, 20, 19, 19, 20, 20, 19, 19, 20, 20,
-    ]
-
-    const date = new Date()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    const ws = springEquinox[date.getFullYear % 100]
-
-    return month == 2 && day >= ws && day < ws + 7
-}
-const hasParam = () => {
-    let url = new URL(window.location.href)
-    return url.searchParams.get('decoration') === 'spring-equinox'
-}
-export default (width, height) => {
-    if (!isSpringEquinoxWeek() && !hasParam()) {
-        return null
-    }
-
-    let amount = width < 720 ? 15 : 30
-    return new SEEventManager(width, height, amount)
 }

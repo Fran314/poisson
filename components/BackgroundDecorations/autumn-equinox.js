@@ -11,15 +11,41 @@ const SIN_P = Math.sin(P)
 const COS_Q = Math.cos(Q)
 const SIN_Q = Math.sin(Q)
 
+const isAutumnEquinoxWeek = () => {
+    const autumnEquinox = [
+        22, 23, 23, 23, 22, 23, 23, 23, 22, 22, 23, 23, 22, 22, 23, 23, 22, 22,
+        23, 23, 22, 22, 23, 23, 22, 22, 23, 23, 22, 22, 23, 23, 22, 22, 23, 23,
+        22, 22, 23, 23, 22, 22, 22, 23, 22, 22, 22, 23, 22, 22, 22, 23, 22, 22,
+        22, 23, 22, 22, 22, 23, 22, 22, 22, 23, 22, 22, 22, 23, 22, 22, 22, 22,
+        22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+        22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+    ]
+
+    const date = new Date()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const ae = autumnEquinox[date.getFullYear % 100]
+
+    return month == 8 && day >= ws && day < ws + 7
+}
+const hasParam = () => {
+    let url = new URL(window.location.href)
+    return url.searchParams.get('decoration') === 'autumn-equinox'
+}
+
 const easeBetweenPnQ = x => {
     const easedX = 3 * x * x - 2 * x * x * x
     return P + easedX * (Q - P)
 }
 
-class AEEventManager {
-    constructor(width, height, amount) {
+export default class AutumnEquinox {
+    constructor(width, height) {
         this.image = new Image()
         this.image.src = img
+
+        this.active = isAutumnEquinoxWeek() || hasParam()
+
+        const amount = width < 720 ? 10 : 20
 
         this.particles = []
         for (let i = 0; i < amount; i++) {
@@ -110,35 +136,4 @@ class AEEventManager {
             ctx.translate(-x, -y)
         })
     }
-}
-
-const isAutumnEquinoxWeek = () => {
-    const autumnEquinox = [
-        22, 23, 23, 23, 22, 23, 23, 23, 22, 22, 23, 23, 22, 22, 23, 23, 22, 22,
-        23, 23, 22, 22, 23, 23, 22, 22, 23, 23, 22, 22, 23, 23, 22, 22, 23, 23,
-        22, 22, 23, 23, 22, 22, 22, 23, 22, 22, 22, 23, 22, 22, 22, 23, 22, 22,
-        22, 23, 22, 22, 22, 23, 22, 22, 22, 23, 22, 22, 22, 23, 22, 22, 22, 22,
-        22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-        22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-    ]
-
-    const date = new Date()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    const ae = autumnEquinox[date.getFullYear % 100]
-
-    return month == 8 && day >= ws && day < ws + 7
-}
-const hasParam = () => {
-    let url = new URL(window.location.href)
-    return url.searchParams.get('decoration') === 'autumn-equinox'
-}
-export default (width, height) => {
-    if (!isAutumnEquinoxWeek() && !hasParam()) {
-        return null
-    }
-
-    let amount = width < 720 ? 10 : 20
-
-    return new AEEventManager(width, height, amount)
 }

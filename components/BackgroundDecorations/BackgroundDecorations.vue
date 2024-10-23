@@ -1,9 +1,23 @@
 <script setup>
-import generateWS from './winter-solstice.js'
-import generateAE from './autumn-equinox.js'
-import generateSE from './spring-equinox.js'
-import generateChocobo from './chocobo-run.js'
+import WinterSolstice from './winter-solstice.js'
+import AutumnEquinox from './autumn-equinox.js'
+import SpringEquinox from './spring-equinox.js'
+import ChocoboRun from './chocobo-run.js'
 const canvas = ref()
+
+class TimeKeeper {
+    constructor() {
+        this.lastTick = new Date().getTime()
+    }
+
+    tick() {
+        const newTick = new Date().getTime()
+        const dt = (newTick - this.lastTick) / 1000
+        this.lastTick = newTick
+
+        return dt
+    }
+}
 
 onMounted(() => {
     function setSize() {
@@ -18,32 +32,38 @@ onMounted(() => {
     // This is a bit of a convoluted way to handle the Sprite Managers,
     // but it makes it so that if no event is needed, it doesn't enter the
     // render loop at all, which hopefully saves some CPU
+    // const events = [
+    //     generateWS(canvas.value.width, canvas.value.height),
+    //     generateAE(canvas.value.width, canvas.value.height),
+    //     generateSE(canvas.value.width, canvas.value.height),
+    //     generateChocobo(canvas.value.width, canvas.value.height),
+    // ].filter(x => x !== null)
     const events = [
-        generateWS(canvas.value.width, canvas.value.height),
-        generateAE(canvas.value.width, canvas.value.height),
-        generateSE(canvas.value.width, canvas.value.height),
-        generateChocobo(canvas.value.width, canvas.value.height),
-    ].filter(x => x !== null)
+        new WinterSolstice(canvas.value.width, canvas.value.height),
+        new AutumnEquinox(canvas.value.width, canvas.value.height),
+        new SpringEquinox(canvas.value.width, canvas.value.height),
+        new ChocoboRun(canvas.value.width, canvas.value.height),
+    ]
 
-    if (events.length > 0) {
-        let lt = new Date().getTime()
-        const animate = () => {
-            let ct = new Date().getTime()
-            let dt = Math.min((ct - lt) / 1000, 1 / 60)
-            lt = ct
+    const tk = new TimeKeeper()
+    const animate = () => {
+        const dt = tk.tick()
 
-            context.clearRect(0, 0, canvas.value.width, canvas.value.height)
+        context.clearRect(0, 0, canvas.value.width, canvas.value.height)
 
-            events.forEach(event => {
+        let anyStillActive = false
+        events.forEach(event => {
+            if (event.active) {
+                anyStillActive = true
                 event.update(dt, canvas.value.width, canvas.value.height)
                 event.draw(context)
-            })
+            }
+        })
 
-            requestAnimationFrame(animate)
-        }
-
-        animate()
+        if (anyStillActive) requestAnimationFrame(animate)
     }
+
+    animate()
 })
 </script>
 

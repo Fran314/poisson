@@ -1,9 +1,40 @@
 import img from '~/assets/img/decorations/snowflake.png'
 
-class WSEventManager {
-    constructor(width, height, amount) {
+const isWinterSolsticeWeek = () => {
+    const winterSolstice = [
+        21, 21, 22, 22, 21, 21, 22, 22, 21, 21, 22, 22, 21, 21, 22, 22, 21, 21,
+        21, 22, 21, 21, 21, 22, 21, 21, 21, 22, 21, 21, 21, 22, 21, 21, 21, 22,
+        21, 21, 21, 22, 21, 21, 21, 22, 21, 21, 21, 22, 21, 21, 21, 21, 21, 21,
+        21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
+        21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 20, 21, 21, 21, 20, 21,
+        21, 21, 20, 21, 21, 21, 20, 21, 21, 21,
+    ]
+
+    const date = new Date()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const ws = winterSolstice[date.getFullYear % 100]
+
+    return month == 12 && day >= ws && day < ws + 7
+}
+const hasParam = () => {
+    let url = new URL(window.location.href)
+    return url.searchParams.get('decoration') === 'winter-solstice'
+}
+const isChristmas = () => {
+    const date = new Date()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    return month == 12 && day == 25
+}
+
+export default class WinterSolstice {
+    constructor(width, height) {
         this.image = new Image()
         this.image.src = img
+
+        this.active = isWinterSolsticeWeek() || hasParam()
+        const amount = width < 720 ? 15 : 30
 
         this.particles = []
         for (let i = 0; i < amount; i++) {
@@ -42,41 +73,4 @@ class WSEventManager {
             )
         })
     }
-}
-const isWinterSolsticeWeek = () => {
-    const winterSolstice = [
-        21, 21, 22, 22, 21, 21, 22, 22, 21, 21, 22, 22, 21, 21, 22, 22, 21, 21,
-        21, 22, 21, 21, 21, 22, 21, 21, 21, 22, 21, 21, 21, 22, 21, 21, 21, 22,
-        21, 21, 21, 22, 21, 21, 21, 22, 21, 21, 21, 22, 21, 21, 21, 21, 21, 21,
-        21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
-        21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 20, 21, 21, 21, 20, 21,
-        21, 21, 20, 21, 21, 21, 20, 21, 21, 21,
-    ]
-
-    const date = new Date()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    const ws = winterSolstice[date.getFullYear % 100]
-
-    return month == 12 && day >= ws && day < ws + 7
-}
-const isChristmas = () => {
-    const date = new Date()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    return month == 12 && day == 25
-}
-const hasParam = () => {
-    let url = new URL(window.location.href)
-    return url.searchParams.get('decoration') === 'winter-solstice'
-}
-export default (width, height) => {
-    if (!isWinterSolsticeWeek() && !hasParam()) {
-        return null
-    }
-
-    let amount = width < 720 ? 15 : 30
-    if (isChristmas()) amount *= 5
-
-    return new WSEventManager(width, height, amount)
 }
