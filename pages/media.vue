@@ -68,8 +68,10 @@ function calculate() {
             votiPerCredito.push(voto)
         }
 
+        console.log('soglia', sogliaLode.value)
+
         if (voto == 30 && exam.lode) {
-            if (crediti < sogliaLode) {
+            if (crediti < sogliaLode.value) {
                 bonusLode += 0.25
             } else {
                 bonusLode += 0.5
@@ -87,7 +89,7 @@ function calculate() {
         let sum = votiPerCredito.reduce((a, b) => a + b, 0)
         mediaValue.value = sum / votiPerCredito.length
 
-        if (bonusLode > maxLode) bonusLode = maxLode
+        if (bonusLode > maxLode.value) bonusLode = maxLode.value
 
         accesso.value =
             Math.ceil(((mediaValue.value * 11) / 3) * 100) / 100 + bonusLode
