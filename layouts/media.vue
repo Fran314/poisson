@@ -52,7 +52,18 @@ useSeoMeta({
     font-display: swap;
 }
 
+html {
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow-y: clip;
+}
 body {
+    margin: 0;
+
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: scroll;
+
     font-size: 20px;
 }
 .main {
