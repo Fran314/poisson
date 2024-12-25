@@ -24,7 +24,7 @@ const isSpringEquinoxWeek = () => {
     const date = new Date()
     const month = date.getMonth() + 1
     const day = date.getDate()
-    const ws = springEquinox[date.getFullYear % 100]
+    const ws = springEquinox[date.getFullYear() % 100]
 
     return month == 2 && day >= ws && day < ws + 7
 }
@@ -64,8 +64,8 @@ export default class SpringEquinox {
             p.x += p.vx * dt
             p.y += p.vy * dt
 
-            while (p.x + 100 < 0) p.x += width + 200
-            while (p.y > height + 100) p.y -= height + 200
+            while (p.x + 100 < 0) p.x += width + 100 + 100
+            while (p.y > height + 100) p.y -= height + 100 + 100 // the additional +100 is to start at height -100 instead of 0
         })
     }
 

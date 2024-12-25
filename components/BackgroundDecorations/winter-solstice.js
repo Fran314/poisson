@@ -13,7 +13,7 @@ const isWinterSolsticeWeek = () => {
     const date = new Date()
     const month = date.getMonth() + 1
     const day = date.getDate()
-    const ws = winterSolstice[date.getFullYear % 100]
+    const ws = winterSolstice[date.getFullYear() % 100]
 
     return month == 12 && day >= ws && day < ws + 7
 }
@@ -58,7 +58,9 @@ export default class WinterSolstice {
             p.vx = clamp(p.vx, -100, 100)
 
             p.x = mod(p.x + 100, width + 200) - 100
-            if (p.y > height + 100) p.y = -100
+            while (p.y > height + 100) {
+                p.y -= height + 100 + 100 // the additional +100 is to start at height -100 instead of 0
+            }
         })
     }
 

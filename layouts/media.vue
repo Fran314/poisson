@@ -35,6 +35,8 @@ useSeoMeta({
 </script>
 
 <template>
+    <BackgroundDecorations />
+
     <div class="main">
         <slot />
     </div>

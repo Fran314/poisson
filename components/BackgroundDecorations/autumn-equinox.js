@@ -24,7 +24,7 @@ const isAutumnEquinoxWeek = () => {
     const date = new Date()
     const month = date.getMonth() + 1
     const day = date.getDate()
-    const ae = autumnEquinox[date.getFullYear % 100]
+    const ae = autumnEquinox[date.getFullYear() % 100]
 
     return month == 8 && day >= ws && day < ws + 7
 }
@@ -94,9 +94,9 @@ export default class AutumnEquinox {
                 // Again, keep in mind that SIN_P, SIN_Q < 0 but also that the canvas
                 // has y increasing downwards
                 p.anchorY += -(SIN_Q - SIN_P) * p.swingHeight
-                if (p.anchorY > height + 100) {
+                while (p.anchorY > height + 100) {
                     p.life = 0
-                    p.anchorY = -100
+                    p.anchorY -= height + 100 + 100 // the additional +100 is to start at height -100 instead of 0
                 }
 
                 p.swingDir = newSwingDir

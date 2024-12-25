@@ -68,8 +68,6 @@ function calculate() {
             votiPerCredito.push(voto)
         }
 
-        console.log('soglia', sogliaLode.value)
-
         if (voto == 30 && exam.lode) {
             if (crediti < sogliaLode.value) {
                 bonusLode += 0.25
