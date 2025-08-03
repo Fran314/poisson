@@ -7,5 +7,9 @@ mobile
 Per buildare e deployare il sito, usare:
 
 ```bash
-npm run generate && rsync dist/* baldino@poisson.phc.dm.unipi.it:public_html/. -r
+export BASE_URL="/"; npm run build && rsync dist/* baldino.dev:/var/www/html/baldino.dev/. -r
+```
+
+```bash
+export BASE_URL="/~baldino/"; npm run build && rsync dist/* baldino@poisson.phc.dm.unipi.it:public_html/. -r
 ```
