@@ -13,3 +13,15 @@ export BASE_URL="/"; npm run build && rsync dist/* baldino.dev:/var/www/html/bal
 ```bash
 export BASE_URL="/~baldino/"; npm run build && rsync dist/* baldino@poisson.phc.dm.unipi.it:public_html/. -r
 ```
+
+Per utilizzarlo su poisson è necessario aggiungere il seguente file `.htaccess`
+alla radice di `public_html`
+
+```
+RewriteEngine On
+
+# If the request is not a file or directory, serve index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /~baldino/index.html [L]
+```
