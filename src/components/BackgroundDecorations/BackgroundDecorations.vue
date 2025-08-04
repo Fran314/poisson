@@ -1,9 +1,12 @@
 <script setup>
-import { ref, onMounted, onActivated } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import WinterSolstice from './winter-solstice.js'
 import AutumnEquinox from './autumn-equinox.js'
 import SpringEquinox from './spring-equinox.js'
 import ChocoboRun from './chocobo-run.js'
+
+const route = useRoute()
 
 const canvas = ref(null)
 
@@ -21,6 +24,45 @@ class TimeKeeper {
     }
 }
 
+class EventManager {
+    constructor() {
+    }
+
+    #reqAnimFrameID
+
+    restart = () => {
+        this.events = [
+            new WinterSolstice(canvas.value.width, canvas.value.height),
+            new AutumnEquinox(canvas.value.width, canvas.value.height),
+            new SpringEquinox(canvas.value.width, canvas.value.height),
+            new ChocoboRun(canvas.value.width, canvas.value.height),
+        ]
+        this.tk = new TimeKeeper()
+
+        cancelAnimationFrame(this.#reqAnimFrameID)
+        this.#animate()
+    }
+
+    #animate = () => {
+        const dt = this.tk.tick()
+
+        const context = canvas.value.getContext('2d')
+        context.clearRect(0, 0, canvas.value.width, canvas.value.height)
+
+        let anyStillActive = false
+        this.events.forEach(event => {
+            if (event.active) {
+                anyStillActive = true
+                event.update(dt, canvas.value.width, canvas.value.height)
+                event.draw(context)
+            }
+        })
+
+        if (anyStillActive)
+            this.#reqAnimFrameID = requestAnimationFrame(this.#animate)
+    }
+}
+
 onMounted(() => {
     function setSize() {
         canvas.value.width = window.innerWidth
@@ -29,43 +71,12 @@ onMounted(() => {
     setSize()
     window.addEventListener('resize', setSize, false)
 
-    const context = canvas.value.getContext('2d')
+    const eventManager = new EventManager()
+    eventManager.restart()
 
-    // This is a bit of a convoluted way to handle the Sprite Managers,
-    // but it makes it so that if no event is needed, it doesn't enter the
-    // render loop at all, which hopefully saves some CPU
-    // const events = [
-    //     generateWS(canvas.value.width, canvas.value.height),
-    //     generateAE(canvas.value.width, canvas.value.height),
-    //     generateSE(canvas.value.width, canvas.value.height),
-    //     generateChocobo(canvas.value.width, canvas.value.height),
-    // ].filter(x => x !== null)
-    const events = [
-        new WinterSolstice(canvas.value.width, canvas.value.height),
-        new AutumnEquinox(canvas.value.width, canvas.value.height),
-        new SpringEquinox(canvas.value.width, canvas.value.height),
-        new ChocoboRun(canvas.value.width, canvas.value.height),
-    ]
-
-    const tk = new TimeKeeper()
-    const animate = () => {
-        const dt = tk.tick()
-
-        context.clearRect(0, 0, canvas.value.width, canvas.value.height)
-
-        let anyStillActive = false
-        events.forEach(event => {
-            if (event.active) {
-                anyStillActive = true
-                event.update(dt, canvas.value.width, canvas.value.height)
-                event.draw(context)
-            }
-        })
-
-        if (anyStillActive) requestAnimationFrame(animate)
-    }
-
-    animate()
+    watch(() => route.query.decoration, () => {
+        eventManager.restart()
+    })
 })
 </script>
 
