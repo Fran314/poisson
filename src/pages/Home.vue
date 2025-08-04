@@ -7,7 +7,7 @@ import { rebaseUrl } from '@/utils';
 </script>
 <template>
     <FinalFantasy title="Home">
-        <CardEntryCharacter img="/img/baldo.png" :lefty="false" name="Francesco" />
+        <CardEntryCharacter img="/res/img/baldo.png" :lefty="false" name="Francesco" />
         <TextblockEntry>
             <h4>Francesco Baldino</h4>
             <p>

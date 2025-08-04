@@ -6,7 +6,7 @@ import { rebaseUrl } from '@/utils';
 </script>
 <template>
     <FinalFantasy title="Università">
-        <CardHref :link="rebaseUrl('/universita/tesi-triennale.pdf')" img="img/tesi-triennale.png"
+        <CardHref :link="rebaseUrl('/res/universita/tesi-triennale.pdf')" img="/res/img/tesi-triennale.png"
             center="Tesi Triennale" topLeft="16 Dic. 2022" topRight="PQ key exchange"
             bottomRight="relatori: A. Bernasconi, S. Chessa" />
         <TextblockEntry>

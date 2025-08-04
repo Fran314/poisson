@@ -5,7 +5,7 @@ import PuzzlePage from '@/components/PuzzlePage.vue'
 <template>
     <FinalFantasy title="¿?¿">
         <PuzzlePage solutionHash="106940952">
-            <img src="/puzzles/mappa.png" />
+            <img src="/res/puzzles/mappa.png" />
         </PuzzlePage>
     </FinalFantasy>
 </template>

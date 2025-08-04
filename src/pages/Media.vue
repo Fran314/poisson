@@ -201,7 +201,7 @@ if (examsList.value.length > 1) {
         specificato nel regolamento del corso di laurea
         <a :href="linkRegolamento" target="_blank">{{
             mediaType == 'T' ? 'triennale' : 'magistrale'
-            }}</a>
+        }}</a>
         2024/2025 (punti [a] e [b] della sezione "Modalità determinazione voto
         di Laurea"), riportato di seguito:<br />
         [a] Il punteggio di base è calcolato a partire dal curriculum del
@@ -244,7 +244,7 @@ if (examsList.value.length > 1) {
 <style scoped>
 @font-face {
     font-family: 'ComicShannsMono';
-    src: url('/fonts/ComicShannsMonoNerdFont-Regular.otf') format('opentype');
+    src: url('/res/fonts/ComicShannsMonoNerdFont-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
     /* font-display: swap; */

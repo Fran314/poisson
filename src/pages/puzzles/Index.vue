@@ -7,7 +7,7 @@ import TextblockEntry from '@/components/TextblockEntry.vue'
 <template>
     <FinalFantasy title="¿?¿">
         <CustomRouterLink to="/puzzles/poligono">
-            <CardEntryModular :compressible="false" img="/puzzles/poligono-mugshot.png" :clickable="true">
+            <CardEntryModular :compressible="false" img="/res/puzzles/poligono-mugshot.png" :clickable="true">
                 <template #main>
                     <div class="main">Un poligono</div>
                 </template>
@@ -15,7 +15,8 @@ import TextblockEntry from '@/components/TextblockEntry.vue'
         </CustomRouterLink>
 
         <CustomRouterLink to="/puzzles/mappa">
-            <CardEntryModular :compressible="false" img="/puzzles/mappa-mugshot.png" :clickable="true" :lefty="false">
+            <CardEntryModular :compressible="false" img="/res/puzzles/mappa-mugshot.png" :clickable="true"
+                :lefty="false">
                 <template #main>
                     <div class="main">Una mappa</div>
                 </template>
@@ -23,7 +24,7 @@ import TextblockEntry from '@/components/TextblockEntry.vue'
         </CustomRouterLink>
 
         <CustomRouterLink to="/puzzles/spartito">
-            <CardEntryModular :compressible="false" img="/puzzles/spartito.png" :clickable="true">
+            <CardEntryModular :compressible="false" img="/res/puzzles/spartito.png" :clickable="true">
                 <template #main>
                     <div class="main">Uno spartito</div>
                 </template>
@@ -31,7 +32,7 @@ import TextblockEntry from '@/components/TextblockEntry.vue'
         </CustomRouterLink>
 
         <CustomRouterLink to="/puzzles/testo">
-            <CardEntryModular :compressible="false" img="/puzzles/testo.png" :clickable="true" :lefty="false">
+            <CardEntryModular :compressible="false" img="/res/puzzles/testo.png" :clickable="true" :lefty="false">
                 <template #main>
                     <div class="main">Un testo</div>
                 </template>

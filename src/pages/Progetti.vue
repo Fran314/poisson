@@ -5,7 +5,7 @@ import CardHref from '@/components/CardHref.vue';
 </script>
 <template>
     <FinalFantasy title="Contatti">
-        <CardHref link="https://github.com/Fran314/poisson" img="/img/vue.png" center="Questo bellissimo sito!"
+        <CardHref link="https://github.com/Fran314/poisson" img="/res/img/vue.png" center="Questo bellissimo sito!"
             topLeft="GitHub" bottomRight="built in Vue3">
         </CardHref>
         <CardEntry :disabled="true" />

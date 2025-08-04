@@ -33,7 +33,7 @@ const props = defineProps(['title'])
 <style scoped>
 @font-face {
   font-family: 'Recursive';
-  src: url('/fonts/RecMonoDuotoneNerdFont-Regular.ttf') format('truetype');
+  src: url('/res/fonts/RecMonoDuotoneNerdFont-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -41,7 +41,7 @@ const props = defineProps(['title'])
 
 @font-face {
   font-family: 'Recursive';
-  src: url('/fonts/RecMonoDuotoneNerdFont-Bold.ttf') format('truetype');
+  src: url('/res/fonts/RecMonoDuotoneNerdFont-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -49,7 +49,7 @@ const props = defineProps(['title'])
 
 @font-face {
   font-family: 'Recursive';
-  src: url('/fonts/RecMonoDuotoneNerdFont-Italic.ttf') format('truetype');
+  src: url('/res/fonts/RecMonoDuotoneNerdFont-Italic.ttf') format('truetype');
   font-weight: normal;
   font-style: italic;
   font-display: swap;
@@ -57,7 +57,7 @@ const props = defineProps(['title'])
 
 @font-face {
   font-family: 'Recursive';
-  src: url('/fonts/RecMonoDuotoneNerdFont-BoldItalic.ttf') format('truetype');
+  src: url('/res/fonts/RecMonoDuotoneNerdFont-BoldItalic.ttf') format('truetype');
   font-weight: bold;
   font-style: italic;
   font-display: swap;
@@ -65,7 +65,7 @@ const props = defineProps(['title'])
 
 @font-face {
   font-family: 'BigBlueTerm';
-  src: url('/fonts/BigBlueTerm437NerdFont-Regular.ttf') format('truetype');
+  src: url('/res/fonts/BigBlueTerm437NerdFont-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;

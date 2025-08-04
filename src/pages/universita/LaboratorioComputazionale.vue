@@ -6,8 +6,8 @@ import { rebaseUrl } from '@/utils';
 </script>
 <template>
     <FinalFantasy title="Università">
-        <CardHref :link="rebaseUrl('/universita/laboratorio-computazionale.pdf')"
-            img="/img/laboratorio-computazionale.png" center="Laboratorio Computazionale" topLeft="Ottobre 2022"
+        <CardHref :link="rebaseUrl('/res/universita/laboratorio-computazionale.pdf')"
+            img="/res/img/laboratorio-computazionale.png" center="Laboratorio Computazionale" topLeft="Ottobre 2022"
             topRight="FHE vs MPC" bottomRight="relatori: A. Bernasconi, S. Chessa" />
 
         <TextblockEntry>

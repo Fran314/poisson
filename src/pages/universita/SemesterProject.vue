@@ -6,8 +6,8 @@ import { rebaseUrl } from '@/utils';
 </script>
 <template>
     <FinalFantasy title="Università">
-        <CardHref :link="rebaseUrl('/universita/semester-project.pdf')" img="/img/semester-project.png" :lefty="false"
-            center="Semester Project @ EPFL" topLeft="Giugno 2022" topRight="Preimage-sampling"
+        <CardHref :link="rebaseUrl('/res/universita/semester-project.pdf')" img="/res/img/semester-project.png"
+            :lefty="false" center="Semester Project @ EPFL" topLeft="Giugno 2022" topRight="Preimage-sampling"
             bottomRight="supervisors: A. Chiesa, G. Fenzi" />
         <TextblockEntry>
             <h4>Semester project</h4>
