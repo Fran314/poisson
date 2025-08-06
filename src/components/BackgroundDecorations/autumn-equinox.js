@@ -1,6 +1,6 @@
 import img from '@/assets/img/decorations/autumn-leaf.png'
 
-import { lerp, mod } from '@/utils'
+import { lerp, mod } from './utils'
 
 const SWING_WIDTH = 200
 const SWING_HEIGHT = 150

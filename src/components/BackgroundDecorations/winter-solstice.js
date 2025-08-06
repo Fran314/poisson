@@ -1,6 +1,6 @@
 import img from '@/assets/img/decorations/snowflake.png'
 
-import { mod, clamp } from '@/utils'
+import { mod, clamp } from './utils'
 
 const isWinterSolsticeWeek = () => {
     const winterSolstice = [
