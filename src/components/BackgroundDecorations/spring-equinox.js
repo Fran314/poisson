@@ -25,9 +25,9 @@ const isSpringEquinoxWeek = () => {
     const date = new Date()
     const month = date.getMonth() + 1
     const day = date.getDate()
-    const ws = springEquinox[date.getFullYear() % 100]
+    const se = springEquinox[date.getFullYear() % 100]
 
-    return month == 3 && day >= ws && day < ws + 7
+    return month == 3 && day >= se && day < se + 7
 }
 const hasParam = () => {
     let url = new URL(window.location.href)

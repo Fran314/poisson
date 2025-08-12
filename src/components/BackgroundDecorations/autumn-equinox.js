@@ -28,7 +28,7 @@ const isAutumnEquinoxWeek = () => {
     const day = date.getDate()
     const ae = autumnEquinox[date.getFullYear() % 100]
 
-    return month == 9 && day >= ws && day < ws + 7
+    return month == 9 && day >= ae && day < ae + 7
 }
 const hasParam = () => {
     let url = new URL(window.location.href)
