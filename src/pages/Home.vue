@@ -6,13 +6,12 @@ import FinalFantasy from '@/layouts/FinalFantasy.vue';
 import { rebaseUrl } from '@/utils';
 </script>
 <template>
-    <FinalFantasy title="Home">
+    <FinalFantasy title="Poisson">
         <CardEntryCharacter img="/res/img/baldo.png" :lefty="false" name="Francesco" />
         <TextblockEntry>
             <h4>Francesco Baldino</h4>
             <p>
-                Sono uno studente di Matematica Magistrale all'Università di
-                Pisa.
+                Sono un ex-studente di Matematica all'Università di Pisa.
             </p>
             <p>
                 Sono interessato allo studio della Crittografia, e potete
@@ -22,8 +21,7 @@ import { rebaseUrl } from '@/utils';
             </p>
             <br />
             <p>
-                Questa è la mia pagina personale, dove potrete trovare progetti
-                a cui ho lavorato, appunti dei corsi che ho seguito e... altre
+                Questa è la mia pagina personale, dove potrete trovare appunti dei corsi che ho seguito e... altre
                 cose.
             </p>
             <br />

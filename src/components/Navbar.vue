@@ -8,7 +8,7 @@ const props = defineProps(['page'])
     <div class="navbar">
         <NavbarEntry name="Home" routeTo="/" />
         <NavbarEntry name="Università" routeTo="/universita" />
-        <NavbarEntry name="Progetti" routeTo="/progetti" />
+        <!-- <NavbarEntry name="Progetti" routeTo="/progetti" /> -->
         <NavbarEntry name="Appunti" routeTo="/appunti" />
         <NavbarEntry name="Contatti" routeTo="/contatti" />
         <NavbarEntry name="Varie" routeTo="/varie" />

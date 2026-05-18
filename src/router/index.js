@@ -17,77 +17,77 @@ import Spartito from '@/pages/puzzles/Spartito.vue'
 import Testo from '@/pages/puzzles/Testo.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      component: Home
-    },
-    {
-      path: '/appunti',
-      component: Appunti
-    },
-    {
-      path: '/contatti',
-      component: Contatti
-    },
-    {
-      path: '/varie',
-      component: Varie
-    },
-    {
-      path: '/varie/easter-egg',
-      component: EasterEgg
-    },
-    {
-      path: '/media',
-      component: Media
-    },
-    {
-      path: '/progetti',
-      component: Progetti
-    },
-    {
-      path: '/universita',
-      component: Universita
-    },
-    {
-      path: '/universita/tesi-triennale',
-      component: TesiTriennale
-    },
-    {
-      path: '/universita/semester-project',
-      component: SemesterProject
-    },
-    {
-      path: '/universita/laboratorio-computazionale',
-      component: LaboratorioComputazionale
-    },
-    {
-      path: '/puzzles',
-      component: Puzzles
-    },
-    {
-      path: '/puzzles/mappa',
-      component: Mappa
-    },
-    {
-      path: '/puzzles/poligono',
-      component: Poligono
-    },
-    {
-      path: '/puzzles/spartito',
-      component: Spartito
-    },
-    {
-      path: '/puzzles/testo',
-      component: Testo
-    },
-    {
-      path: '/:pathMatch(.*)*',
-      redirect: '/',
-    },
-  ],
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
+        {
+            path: '/',
+            component: Home,
+        },
+        {
+            path: '/appunti',
+            component: Appunti,
+        },
+        {
+            path: '/contatti',
+            component: Contatti,
+        },
+        {
+            path: '/varie',
+            component: Varie,
+        },
+        {
+            path: '/varie/easter-egg',
+            component: EasterEgg,
+        },
+        {
+            path: '/media',
+            component: Media,
+        },
+        // {
+        //   path: '/progetti',
+        //   component: Progetti
+        // },
+        {
+            path: '/universita',
+            component: Universita,
+        },
+        {
+            path: '/universita/tesi-triennale',
+            component: TesiTriennale,
+        },
+        {
+            path: '/universita/semester-project',
+            component: SemesterProject,
+        },
+        {
+            path: '/universita/laboratorio-computazionale',
+            component: LaboratorioComputazionale,
+        },
+        {
+            path: '/puzzles',
+            component: Puzzles,
+        },
+        {
+            path: '/puzzles/mappa',
+            component: Mappa,
+        },
+        {
+            path: '/puzzles/poligono',
+            component: Poligono,
+        },
+        {
+            path: '/puzzles/spartito',
+            component: Spartito,
+        },
+        {
+            path: '/puzzles/testo',
+            component: Testo,
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            redirect: '/',
+        },
+    ],
 })
 
 export default router
