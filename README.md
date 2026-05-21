@@ -25,4 +25,7 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 # RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /~baldino/index.html [L]
+
+# Prevent indexing of all files
+Header set X-Robots-Tag "noindex, nofollow"
 ```
